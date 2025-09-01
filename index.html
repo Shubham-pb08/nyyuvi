@@ -75,6 +75,10 @@ https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
             margin: 0px;
         }
 
+        .order-text {
+            font-weight: bold;
+        }
+
         .header-text {
             font-family: 'Nunito sans';
             padding-right: 15pt;
@@ -130,6 +134,7 @@ https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
             list-style: none;
             text-align: left;
             padding: 10pt;
+            font-weight: bold;
         }
 
         .bill-from ul li:nth-child(1) div,
@@ -151,7 +156,7 @@ https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
         .invoice-data-container .invoice-data-info-table .invoice-info-text {
             font-family: "Nunito", sans-serif;
             font-optical-sizing: auto;
-            font-weight: 600;
+            font-weight: bold;
             font-style: normal;
             font-size: 12pt;
             margin: 0px;
@@ -506,7 +511,7 @@ https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
                         </td>
                         <td class="td">
                             <span class="amount-text">
-                                $1000.00
+                                $${obj.amount}
                             </span>
                         </td>
                     </tr>
@@ -527,7 +532,6 @@ https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
                 },
                 callback: function (doc) {
                     doc.setFillColor(255,255,255,0.3);
-                    doc.setFont("Nunito", "normal");
                     doc.setFont("Nunito", "bold");
                     doc.save();
                 }
