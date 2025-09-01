@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>NY-YUVI Invoice with jsPDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+
+        
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+<script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script src="
+https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
+"></script>
+
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="Nunito-normal.js"></script> <!-- adjust path -->
+<script src="Nunito-bold.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+            padding: 30px;
+        }
+
+        .invoice-form {
+            position: relative;
+            background-repeat: no-repeat;
+            background-size: 70%;
+            background-position: center;
+            /* background-image: linear-gradient(rgb(255,255,255), rgba(255,255,255,0.6)),url(images/image5.jpg); */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-img-container {
+            width: 225pt;
+        }
+
+        .logo-img-container .logo-img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nunito-heading {
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 800;
+            font-style: normal;
+            font-size: 37.5pt;
+            margin: 0px;
+        }
+
+        .nunito-text {
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+            font-size: 15pt;
+            margin: 0px;
+        }
+
+        .header-text {
+            font-family: 'Nunito sans';
+            padding-right: 15pt;
+        }
+
+        .invoice-container {
+            margin-top: 32pt;
+        }
+
+        .invoice-container .invoice-info-table td {
+            width: 50%;
+        }
+
+        .invoice-container .invoice-info-table,
+        .billing-container .billing-info-table,
+        .invoice-data-container .invoice-data-info-table {
+            width: 100%;
+            text-align: center;
+            font-size: 15pt;
+        }
+
+        table, th, td {
+            border: 1.5pt solid #000;
+            border-collapse: collapse;
+        }
+
+        .billing-container .billing-info-table td {
+            width: 50%;
+        }
+
+        .billing-container {
+            margin-top: 22.5pt;
+        }
+
+        .bill-from, .bill-to {
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+            font-size: 12pt;
+            margin: 0pt;
+        }
+
+
+        .bill-from ul,
+        .bill-to ul {
+            padding: 0pt;
+            margin: 0pt;
+        }
+
+        .bill-from ul li,
+        .bill-to ul li {
+            list-style: none;
+            text-align: left;
+            padding: 10pt;
+        }
+
+        .bill-from ul li:nth-child(1) div,
+        .bill-to ul li:nth-child(1) div {
+            height: 75pt;
+        }
+
+        .invoice-data-container {
+            margin-top: 22.5pt;
+        }
+
+        .invoice-number, .billing-container .billing-info-table th,
+        .invoice-data-container .invoice-data-info-table th,
+        .invoice-data-container .invoice-data-info-table .invoice-data-total td {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .invoice-data-container .invoice-data-info-table .invoice-info-text {
+            font-family: "Nunito", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+            font-size: 12pt;
+            margin: 0px;
+        }
+
+        .invoice-data-container .invoice-data-info-table .invoice-info-text td {
+            padding: 7.5pt 7.5pt 7.5pt 7.5pt;
+        }
+
+        .invoice-data-container .invoice-data-info-table td {
+            width: 33.3%;
+        }
+
+        .invoice-data-container .invoice-data-info-table td div {
+            height: 150pt;
+        }
+
+        .invoice-form {
+            max-width: 600pt;
+            margin: auto;
+            padding: 15pt;
+            border: 1.5pt solid #ddd;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 7.5pt;
+        }
+
+         .flag {
+        color: red;
+        font-size: 9pt;
+        display: none;
+    }
+    .flag.show {
+        display: block;
+    }
+
+    .watermark-container {
+        width: 300pt;
+    }
+
+    .watermark-container .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        z-index: -1;
+        width: 75%;
+    }
+
+    </style>
+    
+</head>
+
+<body>
+
+    <div class="form w-30 mt-5">
+        <div class="parent">
+            <div class="span form-label" >Order Number</div>
+            <span class="flag">Order Number must be entered</span>
+            <input type="text" id="orderNumber" class="form-control">
+        </div>
+
+        <div class="parent">
+            <div class="span form-label">Issue Date</div>
+            <span class="flag">Issue Date must be entered</span>
+            <input type="text" id="issueDate" class="form-control">
+        </div>
+
+        <div class="parent">
+            <div class="span form-label">Bill To Address<span>*</span></div>
+            <span class="flag">Bill To Date must be entered</span>
+            <input type="text" id="billToAddress" class="form-control">
+        </div>
+
+        <div class="parent">
+            <div class="span form-label">Bill To Email</div>
+            <input type="text" id="billToEmail" class="form-control">
+        </div>
+
+        <div class="parent">
+            <div class="span form-label">Bill To Phone</div>
+            <input type="text" id="billToPhone" class="form-control">
+        </div>
+
+        <div class="parent">
+            <div class="span form-label">Shipper Address<span>*</span></div>
+            <span class="flag">Shipper Address must be entered</span>
+            <input type="text" id="shipperAddress" class="form-control">
+        </div>
+
+        <div class="parent">
+            <div class="span form-label">Consignee Address<span>*</span></div>
+            <span class="flag">Consignee Address must be entered</span>
+            <input type="text" id="consigneeAddress" class="form-control">
+        </div>
+
+        <div class="parent">
+            <div class="span form-label">Reference Number</div>
+            <input type="text" id="referenceNumber" class="form-control">
+        </div>
+
+        <div class="parent">
+            <div class="span form-label">Amount<span>*</span></div>
+            <span class="flag">Amount must be entered</span>
+            <input type="text" id="amount" class="form-control">
+        </div>
+
+        <div class="parent">
+            <button type="submit" onclick="generatePDF()">Generate PDF</button>
+        </div>
+    </div>
+
+
+    <div class="invoice-form" type="application/x-google-chrome-pdf" download>
+
+    </div>
+
+
+    <script>
+      
+
+        let generatePDF = () => {
+            const { jsPDF } = window.jspdf;
+            
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'pt',
+                format: 'a4'
+            });
+
+
+        let orderNumber = document.querySelector('#orderNumber');
+        let issueDate = document.querySelector('#issueDate');
+        let billToAddress = document.querySelector('#billToAddress');
+        let billToEmail = document.querySelector('#billToEmail');
+        let billToPhone = document.querySelector('#billToPhone');
+        let shipperAddress = document.querySelector('#shipperAddress');
+        let consigneeAddress = document.querySelector('#consigneeAddress');
+        let referenceNumber = document.querySelector('#referenceNumber');
+        let amount = document.querySelector('#amount');
+
+        let obj = {};
+        let flag = false;        
+        
+            referenceNumber.value != '' ? obj.referenceNumber = referenceNumber.value : obj.referenceNumber = "N/A";
+            billToEmail.value != '' ? obj.billToEmail = billToEmail.value : obj.billToEmail = "N/A";
+            billToPhone.value != '' ? obj.billToPhone = billToPhone.value : obj.billToPhone = "N/A";
+
+            if(orderNumber.value != '' && orderNumber.value.length >= 2 && isNaN(orderNumber.value) == false) {
+                obj.orderNumber = orderNumber.value;
+                orderNumber.parentElement.querySelector('.flag').classList.remove('show');
+                orderNumber.value = '';
+                flag = false;
+            }
+            else {
+                orderNumber.parentElement.querySelector('.flag').classList.add('show');
+                orderNumber.value = '';
+                flag = true;
+            }
+
+            if(issueDate.value != '') {
+                obj.issueDate = issueDate.value;
+                issueDate.parentElement.querySelector('.flag').classList.remove('show');
+                issueDate.value = '';
+                flag = false;
+            }
+            else {
+                issueDate.parentElement.querySelector('.flag').classList.add('show');
+                orderNumber.value = '';
+                flag = true;
+            }
+
+            if(billToAddress.value != '') {
+                obj.billToAddress = billToAddress.value;
+                billToAddress.parentElement.querySelector('.flag').classList.remove('show');
+                billToAddress.value = '';
+                flag = false;
+            }
+            else {
+                billToAddress.parentElement.querySelector('.flag').classList.add('show');
+                orderNumber.value = '';
+                flag = true;
+            }
+
+            if(shipperAddress.value != '') {
+                obj.shipperAddress = shipperAddress.value;
+                shipperAddress.parentElement.querySelector('.flag').classList.remove('show');
+                shipperAddress.value = '';
+                flag = false;
+            }
+            else {
+                shipperAddress.parentElement.querySelector('.flag').classList.add('show');
+                orderNumber.value = '';
+                flag = true;
+            }
+
+            if(consigneeAddress.value != '') {
+                obj.consigneeAddress = consigneeAddress.value;
+                consigneeAddress.parentElement.querySelector('.flag').classList.remove('show');
+                consigneeAddress.value = '';
+                flag = false;
+            }
+            else {
+                consigneeAddress.parentElement.querySelector('.flag').classList.add('show');
+                orderNumber.value = '';
+                flag = true;
+            }
+
+            if(amount.value != '' && isNaN(amount.value) == false) {
+                obj.amount = amount.value;
+                amount.parentElement.querySelector('.flag').classList.remove('show');
+                amount.value = '';
+                flag = false;
+            }
+            else {
+                amount.parentElement.querySelector('.flag').classList.add('show');
+                orderNumber.value = '';
+                flag = true;
+            }
+
+            console.log(flag);
+            
+            if(flag == false) {
+                console.log('object released ',obj);               
+            }
+
+            let data = `
+                    
+        <div class="container">
+            <div class="watermark-container">
+                <img src="images/faded.png" class="watermark" />
+            </div>
+            <div class="header">
+                <div class="logo-img-container">
+                    <img class="logo-img" src="images/image5.jpg" alt="logo" />
+                </div>
+
+                <div class="header-text">
+                    <h2 class="invoice-text nunito-heading">INVOICE</h2>
+                    <h4 class="order-text nunito-text">ORDER #${obj.orderNumber}</h4>
+                </div>
+            </div>
+
+            <div class="invoice-container">
+                <table class="invoice-info-table" >
+                    <tr>
+                        <td class="td invoice-number">Invoice #${obj.orderNumber}</td>
+                        <td class="td">ISSUED DATE: ${obj.issueDate}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="billing-container">
+                <table class="billing-info-table" >
+                    <tr>
+                        <th class="td billing-header nunito-text">Bill From</th>
+                        <th class="td nunito-text">Bill To</th>
+                    </tr>
+                    <tr>
+                        <td class="td bill-from">
+                            <ul>
+                                <li>
+                                    <span>
+
+                                    </span>
+                                    <div>
+                                        NY-YUVI TRANSPORT INC.
+                                        7367 Sigsbee Drive, Mississauga, ON
+                                        L4T 3S5
+                                    </div>
+                                </li>
+                                <li>
+                                    <span></span>
+                                    <div>647-521-6535</div>
+                                </li>
+                                <li>
+                                    <span></span>
+                                    <div>NYYUVITRANSPORT@GMAIL.COM</div>
+                                </li>
+                                <li>
+                                    <span></span>
+                                    <div>HST# 83130 9430 RT0001</div>
+                                </li>
+                            </ul>
+                        </td>
+                        <td class="td bill-to">
+                            <ul>
+                                <li>
+                                    <span>
+
+                                    </span>
+                                    <div>
+                                        ${obj.billToAddress}
+                                    </div>
+                                </li>
+                                <li>
+                                    <span></span>
+                                    <div>${obj.billToPhone}</div>
+                                </li>
+                                <li>
+                                    <span></span>
+                                    <div>${obj.billToEmail}</div>
+                                </li>
+                                <li>
+                                    <span></span>
+                                    <div>Reference no.:${obj.referenceNumber}</div>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="invoice-data-container">
+                <table class="invoice-data-info-table">
+                    <tr>
+                        <th class="td nunito-text shipper">Shipper</th>
+                        <th class="td nunito-text consignee">Consignee</th>
+                        <th class="td nunito-text amount">Amount</th>
+                    </tr>
+                    <tr class="invoice-info-text">
+                        <td class="td">
+                            <div class="shipper-text">
+                                ${obj.shipperAddress}
+                            </div>
+                        </td>
+                        <td class="td">
+                            <div class="consignee-text">
+                                ${obj.consigneeAddress}
+                            </div>
+                        </td>
+                        <td class="td">
+                            <div class="amount-text">
+                                ${obj.amount}
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr class="invoice-data-total">
+                        <td class="td">
+                            <span class="shipper-text">
+                               Total Amount
+                            </span>
+                        </td>
+                        <td class="td">
+                            <span class="consignee-text">
+                                CAD
+                            </span>
+                        </td>
+                        <td class="td">
+                            <span class="amount-text">
+                                $1000.00
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+                `;
+
+                document.querySelector('.invoice-form').innerHTML = data;
+                let elem = document.querySelector('.invoice-form');
+
+                doc.html(elem,
+                { 
+                x: 20,
+                y: 20,
+                html2canvas: {
+                    scale: 0.7 // Scale down entire DOM capture
+                },
+                callback: function (doc) {
+                    doc.setFillColor(255,255,255,0.3);
+                    doc.setFont("Nunito", "normal");
+                    doc.setFont("Nunito", "bold");
+                    doc.save();
+                }
+                });
+        }
+
+    </script>
+
+</body>
+
+</html>
